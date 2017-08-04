@@ -24,16 +24,16 @@ BEGIN
 			KEY_STATE	<= (OTHERS => '0');
 		ELSIF CLK = '1' AND CLK'EVENT THEN
 			IF WR = '1' THEN
-				IF ADDR_WR = X"200" THEN
+				IF ADDR_WR = X"0" THEN
 					KEY_STATE(127 downto 96)<= DATA_WR;
 				END IF;
-				IF ADDR_WR = X"201" THEN
+				IF ADDR_WR = X"1" THEN
 					KEY_STATE(95 downto 64)	<= DATA_WR;
 				END IF;
-				IF ADDR_WR = X"202" THEN
+				IF ADDR_WR = X"2" THEN
 					KEY_STATE(63 downto 32)	<= DATA_WR;
 				END IF;
-				IF ADDR_WR = X"203" THEN
+				IF ADDR_WR = X"3" THEN
 					KEY_STATE(31 downto 0)	<= DATA_WR;
 				END IF;
 			END IF;

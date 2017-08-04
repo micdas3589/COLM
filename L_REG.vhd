@@ -10,6 +10,11 @@ ENTITY L_REG IS
 		INIT		:IN STD_LOGIC;
 		WR			:IN STD_LOGIC;
 		DATA_WR	:IN STD_LOGIC_VECTOR(127 downto 0);
+		DBL_L		:IN STD_LOGIC;
+		DBL_L1	:IN STD_LOGIC;
+		DBL_L2	:IN STD_LOGIC;
+		RD_L		:IN STD_LOGIC;
+		RD_L1		:IN STD_LOGIC;
 		L			:OUT STD_LOGIC_VECTOR(127 downto 0);
 		L1			:OUT STD_LOGIC_VECTOR(127 downto 0);
 		L2			:OUT STD_LOGIC_VECTOR(127 downto 0)
@@ -17,8 +22,9 @@ ENTITY L_REG IS
 END ENTITY;
 
 ARCHITECTURE L_REG_ARCH OF L_REG IS
-	SIGNAL COUNTER	:STD_LOGIC_VECTOR(2 downto 0) := (OTHERS => '0');
-	SIGNAL L_VALUE	:STD_LOGIC_VECTOR(127 downto 0) := (OTHERS => '0');
+	SIGNAL COUNTER		:STD_LOGIC_VECTOR(2 downto 0) := (OTHERS => '0');
+	SIGNAL L_VALUE		:STD_LOGIC_VECTOR(127 downto 0) := (OTHERS => '0');
+	SIGNAL L1_VALUE	:STD_LOGIC_VECTOR(127 downto 0) := (OTHERS => '0');
 	SIGNAL L2_VALUE	:STD_LOGIC_VECTOR(127 downto 0) := (OTHERS => '0');
 BEGIN
 	PROCESS(CLK, INIT)
@@ -26,13 +32,22 @@ BEGIN
 		IF INIT = '1' THEN
 			COUNTER	<= (OTHERS => '0');
 			L_VALUE	<= (OTHERS => '0');
+			L1_VALUE	<= (OTHERS => '0');
+			L2_VALUE	<= (OTHERS => '0');
 		ELSIF CLK = '1' AND CLK'EVENT THEN
 			IF WR = '1' THEN
 				L_VALUE	<= DATA_WR;
-				L2_VALUE	<= DATA_WR;
 				COUNTER	<= COUNTER + 1;
+				IF DATA_WR(127) = '1' THEN
+					L1_VALUE	<= DATA_WR XOR ('0' & DATA_WR(126 downto 0)) XOR X"87";
+					L2_VALUE	<= DATA_WR XOR ('0' & DATA_WR(126 downto 0)) XOR X"87";
+				ELSE
+					L1_VALUE	<= DATA_WR XOR ('0' & DATA_WR(126 downto 0));
+					L2_VALUE	<= DATA_WR XOR ('0' & DATA_WR(126 downto 0));
+				END IF;
 			END IF;
-			IF COUNTER = X"1" OR COUNTER = X"2" THEN
+			
+			IF COUNTER = X"1" THEN
 				IF L2_VALUE(127) = '1' THEN
 					L2_VALUE	<= L2_VALUE XOR ('0' & L2_VALUE(126 downto 0)) XOR X"87";
 				ELSE
@@ -41,12 +56,30 @@ BEGIN
 				
 				COUNTER	<= COUNTER + 1;
 			END IF;
+			
+			IF DBL_L = '1' AND L_VALUE(127) = '1' THEN
+				L_VALUE	<= ('0' & L_VALUE(126 downto 0)) XOR X"87";
+			ELSE
+				L_VALUE	<= ('0' & L_VALUE(126 downto 0));
+			END IF;
+			IF DBL_L1 = '1' AND L1_VALUE(127) = '1' THEN
+				L1_VALUE	<= ('0' & L1_VALUE(126 downto 0)) XOR X"87";
+			ELSE
+				L1_VALUE	<= ('0' & L1_VALUE(126 downto 0));
+			END IF;
+			IF DBL_L2 = '1' AND L2_VALUE(127) = '1' THEN
+				L2_VALUE	<= ('0' & L2_VALUE(126 downto 0)) XOR X"87";
+			ELSE
+				L2_VALUE	<= ('0' & L2_VALUE(126 downto 0));
+			END IF;
 		END IF;
 	END PROCESS;
 	
-	L	<= L_VALUE;
-	L1	<= L_VALUE XOR ('0' & L_VALUE(126 downto 0)) XOR X"87"
-			WHEN L_VALUE(127) = '1' ELSE
-			L_VALUE XOR ('0' & L_VALUE(126 downto 0));
+	L	<= L_VALUE
+			WHEN RD_L = '1'
+			ELSE (OTHERS => '0');
+	L1	<= L1_VALUE
+			WHEN RD_L1 = '1'
+			ELSE (OTHERS => '0');
 	L2	<= L2_VALUE;
 END ARCHITECTURE;

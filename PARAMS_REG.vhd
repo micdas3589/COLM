@@ -28,16 +28,16 @@ BEGIN
 			PARAMETERS	<= (OTHERS => '0');
 		ELSIF CLK = '1' AND CLK'EVENT THEN
 			IF WR = '1' THEN
-				IF ADDR_WR = X"204" THEN
+				IF ADDR_WR = X"4" THEN
 					PARAMETERS(127 downto 96) <= DATA_WR;
 				END IF;
-				IF ADDR_WR = X"205" THEN
+				IF ADDR_WR = X"5" THEN
 					PARAMETERS(95 downto 64) <= DATA_WR;
 				END IF;
-				IF ADDR_WR = X"206" THEN
+				IF ADDR_WR = X"6" THEN
 					PARAMETERS(63 downto 32) <= DATA_WR;
 				END IF;
-				IF ADDR_WR = X"207" THEN
+				IF ADDR_WR = X"7" THEN
 					PARAMETERS(31 downto 0) <= DATA_WR;
 				END IF;
 			END IF;
