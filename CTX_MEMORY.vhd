@@ -14,7 +14,7 @@ ENTITY CTX_MEMORY IS PORT
 	DIN	:IN STD_LOGIC_VECTOR(31 DOWNTO 0);
 	
 	DRL	:OUT STD_LOGIC;
-	DOUT	:OUT STD_LOGIC_VECTOR(31 DOWNTO 0)
+	DOUT	:OUT STD_LOGIC_VECTOR(127 DOWNTO 0)
 );
 END ENTITY;
 
@@ -42,7 +42,7 @@ BEGIN
 					CTR <= STD_LOGIC_VECTOR(unsigned(CTR) + 1);
 				END IF;
 				IF ((STORE = '0' AND LOAD = '1' AND CTR /= X"00") OR (STORE = '1' AND LOAD = '1' AND CTR = MEM_SIZE)) THEN
-					CTR <= STD_LOGIC_VECTOR(unsigned(CTR) - 1);
+					CTR <= STD_LOGIC_VECTOR(unsigned(CTR) - 4);
 				END IF;
 			END IF;
 		END IF;
@@ -71,7 +71,7 @@ BEGIN
 			IF (CLK'EVENT AND CLK = '1') THEN
 				IF (LOAD = '1' AND CTR /= X"00") THEN
 					IF(IXL /= LAST_ADDR) THEN
-						IXL <= STD_LOGIC_VECTOR(unsigned(IXL) + 1);
+						IXL <= STD_LOGIC_VECTOR(unsigned(IXL) + 4);
 					ELSE
 						IXL <= (others => '0');
 					END IF;
@@ -93,7 +93,7 @@ BEGIN
 	BEGIN
 		IF (CLK'EVENT AND CLK = '1') THEN
 			IF(LOAD = '1' AND CTR /= X"00") THEN
-				DOUT <= MEM(conv_integer(IXL));
+				DOUT <= MEM(conv_integer(IXL)) & MEM(conv_integer(IXL) + 1) & MEM(conv_integer(IXL) + 2) & MEM(conv_integer(IXL) + 3);
 			ELSE
 				DOUT <= (others => 'Z');
 			END IF;
