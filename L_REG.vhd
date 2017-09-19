@@ -35,42 +35,42 @@ BEGIN
 			L1_VALUE	<= (OTHERS => '0');
 			L2_VALUE	<= (OTHERS => '0');
 		ELSIF CLK = '1' AND CLK'EVENT THEN
+			IF DBL_L = '1' AND L_VALUE(127) = '1' THEN
+				L_VALUE	<= (L_VALUE(126 downto 0) & '0') XOR X"00000000000000000000000000000087";
+			ELSIF DBL_L = '1' THEN
+				L_VALUE	<= (L_VALUE(126 downto 0) & '0');
+			END IF;
+			IF DBL_L1 = '1' AND L1_VALUE(127) = '1' THEN
+				L1_VALUE	<= (L1_VALUE(126 downto 0) & '0') XOR X"00000000000000000000000000000087";
+			ELSIF DBL_L1 = '1' THEN
+				L1_VALUE	<= (L1_VALUE(126 downto 0) & '0');
+			END IF;
+			IF DBL_L2 = '1' AND L2_VALUE(127) = '1' THEN
+				L2_VALUE	<= (L2_VALUE(126 downto 0) & '0') XOR X"00000000000000000000000000000087";
+			ELSIF DBL_L2 = '1' THEN
+				L2_VALUE	<= (L2_VALUE(126 downto 0) & '0');
+			END IF;
+		
 			IF WR = '1' THEN
 				L_VALUE	<= DATA_WR;
 				COUNTER	<= COUNTER + 1;
 				IF DATA_WR(127) = '1' THEN
-					L1_VALUE	<= DATA_WR XOR ('0' & DATA_WR(126 downto 0)) XOR X"87";
-					L2_VALUE	<= DATA_WR XOR ('0' & DATA_WR(126 downto 0)) XOR X"87";
+					L1_VALUE	<= DATA_WR XOR (DATA_WR(126 downto 0) & '0') XOR X"00000000000000000000000000000087";
+					L2_VALUE	<= DATA_WR XOR (DATA_WR(126 downto 0) & '0') XOR X"00000000000000000000000000000087";
 				ELSE
-					L1_VALUE	<= DATA_WR XOR ('0' & DATA_WR(126 downto 0));
-					L2_VALUE	<= DATA_WR XOR ('0' & DATA_WR(126 downto 0));
+					L1_VALUE	<= DATA_WR XOR (DATA_WR(126 downto 0) & '0');
+					L2_VALUE	<= DATA_WR XOR (DATA_WR(126 downto 0) & '0');
 				END IF;
 			END IF;
 			
 			IF COUNTER = X"1" THEN
 				IF L2_VALUE(127) = '1' THEN
-					L2_VALUE	<= L2_VALUE XOR ('0' & L2_VALUE(126 downto 0)) XOR X"87";
+					L2_VALUE	<= L2_VALUE XOR (L2_VALUE(126 downto 0) & '0') XOR X"00000000000000000000000000000087";
 				ELSE
-					L2_VALUE	<= L2_VALUE XOR ('0' & L2_VALUE(126 downto 0));
+					L2_VALUE	<= L2_VALUE XOR (L2_VALUE(126 downto 0) & '0');
 				END IF;
 				
 				COUNTER	<= COUNTER + 1;
-			END IF;
-			
-			IF DBL_L = '1' AND L_VALUE(127) = '1' THEN
-				L_VALUE	<= ('0' & L_VALUE(126 downto 0)) XOR X"87";
-			ELSE
-				L_VALUE	<= ('0' & L_VALUE(126 downto 0));
-			END IF;
-			IF DBL_L1 = '1' AND L1_VALUE(127) = '1' THEN
-				L1_VALUE	<= ('0' & L1_VALUE(126 downto 0)) XOR X"87";
-			ELSE
-				L1_VALUE	<= ('0' & L1_VALUE(126 downto 0));
-			END IF;
-			IF DBL_L2 = '1' AND L2_VALUE(127) = '1' THEN
-				L2_VALUE	<= ('0' & L2_VALUE(126 downto 0)) XOR X"87";
-			ELSE
-				L2_VALUE	<= ('0' & L2_VALUE(126 downto 0));
 			END IF;
 		END IF;
 	END PROCESS;

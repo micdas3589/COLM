@@ -159,7 +159,7 @@ agreement for further details.
 		(pt 280 32)
 		(output)
 		(text "STATE_OUT[127..0]" (rect 0 0 99 12)(font "Arial" ))
-		(text "STATE_OUT[127..0]" (rect 176 27 259 39)(font "Arial" ))
+		(text "STATE_OUT[127..0]" (rect 176 27 275 39)(font "Arial" ))
 		(line (pt 280 32)(pt 264 32)(line_width 3))
 	)
 	(drawing
@@ -209,7 +209,7 @@ agreement for further details.
 		(pt 248 32)
 		(output)
 		(text "ROUND_KEY[127..0]" (rect 0 0 107 12)(font "Arial" ))
-		(text "ROUND_KEY[127..0]" (rect 137 27 227 39)(font "Arial" ))
+		(text "ROUND_KEY[127..0]" (rect 137 27 244 39)(font "Arial" ))
 		(line (pt 248 32)(pt 232 32)(line_width 3))
 	)
 	(drawing
@@ -245,8 +245,15 @@ agreement for further details.
 		(pt 176 32)
 		(output)
 		(text "LOAD_KEY" (rect 0 0 57 12)(font "Arial" ))
-		(text "LOAD_KEY" (rect 107 27 164 39)(font "Arial" ))
+		(text "LOAD_KEY" (rect 107 27 155 39)(font "Arial" ))
 		(line (pt 176 32)(pt 160 32))
+	)
+	(port
+		(pt 176 48)
+		(output)
+		(text "RUN_RND" (rect 0 0 55 12)(font "Arial" ))
+		(text "RUN_RND" (rect 109 43 155 55)(font "Arial" ))
+		(line (pt 176 48)(pt 160 48))
 	)
 	(drawing
 		(rectangle (rect 16 16 160 96))
@@ -266,11 +273,6 @@ agreement for further details.
 	(text "INIT" (rect 360 216 381 228)(font "Arial" ))
 	(pt 352 232)
 	(pt 408 232)
-)
-(connector
-	(text "RUN" (rect 360 232 384 244)(font "Arial" ))
-	(pt 352 248)
-	(pt 408 248)
 )
 (connector
 	(text "LOAD_KEY" (rect 360 248 417 260)(font "Arial" ))
@@ -321,11 +323,6 @@ agreement for further details.
 	(pt 440 72)
 )
 (connector
-	(text "RUN" (rect 392 72 416 84)(font "Arial" ))
-	(pt 384 88)
-	(pt 440 88)
-)
-(connector
 	(text "STATE_IN[127..0]" (rect 360 88 448 100)(font "Arial" ))
 	(pt 384 104)
 	(pt 440 104)
@@ -362,4 +359,19 @@ agreement for further details.
 	(text "LOAD_KEY" (rect 602 360 659 372)(font "Arial" ))
 	(pt 584 376)
 	(pt 632 376)
+)
+(connector
+	(text "RUN_RND" (rect 598 376 653 388)(font "Arial" ))
+	(pt 584 392)
+	(pt 632 392)
+)
+(connector
+	(text "RUN_RND" (rect 360 232 415 244)(font "Arial" ))
+	(pt 352 248)
+	(pt 408 248)
+)
+(connector
+	(text "RUN_RND" (rect 392 72 447 84)(font "Arial" ))
+	(pt 384 88)
+	(pt 440 88)
 )

@@ -15,7 +15,7 @@
 
 -- PROGRAM		"Quartus II 64-Bit"
 -- VERSION		"Version 15.0.0 Build 145 04/22/2015 Patches 0.01we SJ Web Edition"
--- CREATED		"Sun Aug 06 11:53:23 2017"
+-- CREATED		"Sun Aug 27 15:48:01 2017"
 
 LIBRARY ieee;
 USE ieee.std_logic_1164.all; 
@@ -60,12 +60,14 @@ COMPONENT round_ctrl
 	PORT(CLK : IN STD_LOGIC;
 		 INIT : IN STD_LOGIC;
 		 RUN : IN STD_LOGIC;
-		 LOAD_KEY : OUT STD_LOGIC
+		 LOAD_KEY : OUT STD_LOGIC;
+		 RUN_RND : OUT STD_LOGIC
 	);
 END COMPONENT;
 
 SIGNAL	LOAD_KEY :  STD_LOGIC;
 SIGNAL	ROUND_KEY :  STD_LOGIC_VECTOR(127 DOWNTO 0);
+SIGNAL	RUN_RND :  STD_LOGIC;
 
 
 BEGIN 
@@ -75,7 +77,7 @@ BEGIN
 b2v_KEY_SCHEDULE : key_schedule
 PORT MAP(CLK => CLK,
 		 INIT => INIT,
-		 RUN => RUN,
+		 RUN => RUN_RND,
 		 LOAD_KEY => LOAD_KEY,
 		 KEY => KEY,
 		 ROUND_KEY => ROUND_KEY);
@@ -84,7 +86,7 @@ PORT MAP(CLK => CLK,
 b2v_ROUND : round
 PORT MAP(CLK => CLK,
 		 INIT => INIT,
-		 RUN => RUN,
+		 RUN => RUN_RND,
 		 ROUND_KEY => ROUND_KEY,
 		 STATE_IN => STATE_IN,
 		 STATE_OUT => STATE_OUT);
@@ -94,7 +96,8 @@ b2v_ROUND_CTRL : round_ctrl
 PORT MAP(CLK => CLK,
 		 INIT => INIT,
 		 RUN => RUN,
-		 LOAD_KEY => LOAD_KEY);
+		 LOAD_KEY => LOAD_KEY,
+		 RUN_RND => RUN_RND);
 
 
 END bdf_type;

@@ -52,6 +52,13 @@ agreement for further details.
 		(text "LOAD_KEY" (rect 100 27 155 39)(font "Arial" ))
 		(line (pt 176 32)(pt 160 32)(line_width 1))
 	)
+	(port
+		(pt 176 48)
+		(output)
+		(text "RUN_RND" (rect 0 0 50 12)(font "Arial" ))
+		(text "RUN_RND" (rect 105 43 155 55)(font "Arial" ))
+		(line (pt 176 48)(pt 160 48)(line_width 1))
+	)
 	(drawing
 		(rectangle (rect 16 16 160 96)(line_width 1))
 	)
