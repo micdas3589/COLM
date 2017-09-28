@@ -56,6 +56,11 @@ BEGIN
 		INIT <= '0'; WR <= '1'; ADDR_WR <= X"11111111"; DIN <= X"60000000"; wait for CLKp;
 		INIT <= '0'; WR <= '1'; ADDR_WR <= X"11111111"; DIN <= X"70000000"; wait for CLKp;
 		INIT <= '0'; WR <= '1'; ADDR_WR <= X"11111111"; DIN <= X"80000000"; wait for CLKp;
+		INIT <= '0'; WR <= '1'; ADDR_WR <= X"11111111"; DIN <= X"90000000"; wait for CLKp;
+		INIT <= '0'; WR <= '1'; ADDR_WR <= X"11111111"; DIN <= X"A0000000"; wait for CLKp;
+		INIT <= '0'; WR <= '1'; ADDR_WR <= X"11111111"; DIN <= X"B0000000"; wait for CLKp;
+		INIT <= '0'; WR <= '1'; ADDR_WR <= X"11111111"; DIN <= X"C0000000"; wait for CLKp;
+		INIT <= '0'; WR <= '1'; ADDR_WR <= X"11111111"; DIN <= X"D0000000"; wait for CLKp;
 		INIT <= '0'; WR <= '1'; ADDR_WR <= X"FFFFFFFF"; DIN <= X"00000000"; wait for CLKp;
 		INIT <= '0'; WR <= '0'; ADDR_WR <= X"00000000"; DIN <= X"00000000"; wait for 2000*CLKp;
 		INIT <= '0'; WR <= '0'; ADDR_WR <= X"00000000"; DIN <= X"00000000"; wait for CLKp;

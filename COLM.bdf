@@ -1384,12 +1384,6 @@ agreement for further details.
 	(bus)
 )
 (connector
-	(text "ADDR_WR[31..0]" (rect 170 -312 258 -300)(font "Arial" ))
-	(pt 152 -296)
-	(pt 184 -296)
-	(bus)
-)
-(connector
 	(text "DIN[31..0]" (rect 166 -288 217 -276)(font "Arial" ))
 	(pt 184 -272)
 	(pt 152 -272)
@@ -1506,12 +1500,6 @@ agreement for further details.
 	(text "WR_L" (rect 500 464 530 476)(font "Arial" ))
 	(pt 464 480)
 	(pt 528 480)
-)
-(connector
-	(text "STATE_OUT[127..0]" (rect 275 -304 374 -292)(font "Arial" ))
-	(pt 360 -288)
-	(pt 320 -288)
-	(bus)
 )
 (connector
 	(pt 1512 8)
@@ -1832,4 +1820,21 @@ agreement for further details.
 	(pt 1064 904)
 	(pt 992 904)
 	(bus)
+)
+(connector
+	(text "ADDR_WR[31..0]" (rect 170 -312 258 -300)(font "Arial" ))
+	(pt 144 -296)
+	(pt 184 -296)
+	(bus)
+)
+(connector
+	(text "STATE_OUTA[127..0]" (rect 259 -304 365 -292)(font "Arial" ))
+	(pt 360 -288)
+	(pt 320 -288)
+	(bus)
+)
+(connector
+	(text "WR_CTX" (rect 472 384 516 396)(font "Arial" ))
+	(pt 464 400)
+	(pt 520 400)
 )

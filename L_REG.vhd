@@ -15,6 +15,7 @@ ENTITY L_REG IS
 		DBL_L2	:IN STD_LOGIC;
 		RD_L		:IN STD_LOGIC;
 		RD_L1		:IN STD_LOGIC;
+		PTX_CTR	:IN STD_LOGIC_VECTOR(7 downto 0);
 		LA			:OUT STD_LOGIC_VECTOR(127 downto 0);
 		LB1		:OUT STD_LOGIC_VECTOR(127 downto 0);
 		LC2		:OUT STD_LOGIC_VECTOR(127 downto 0)
@@ -22,18 +23,22 @@ ENTITY L_REG IS
 END ENTITY;
 
 ARCHITECTURE L_REG_ARCH OF L_REG IS
-	SIGNAL COUNTER		:STD_LOGIC_VECTOR(2 downto 0) := (OTHERS => '0');
-	SIGNAL L_VALUE		:STD_LOGIC_VECTOR(127 downto 0) := (OTHERS => '0');
-	SIGNAL L1_VALUE	:STD_LOGIC_VECTOR(127 downto 0) := (OTHERS => '0');
-	SIGNAL L2_VALUE	:STD_LOGIC_VECTOR(127 downto 0) := (OTHERS => '0');
+	SIGNAL COUNTER			:STD_LOGIC_VECTOR(2 downto 0) := (OTHERS => '0');
+	SIGNAL MULT_L_BY_7	:STD_LOGIC := '0';
+	SIGNAL MULT_L2_BY_7	:STD_LOGIC := '0';
+	SIGNAL L_VALUE			:STD_LOGIC_VECTOR(127 downto 0) := (OTHERS => '0');
+	SIGNAL L1_VALUE		:STD_LOGIC_VECTOR(127 downto 0) := (OTHERS => '0');
+	SIGNAL L2_VALUE		:STD_LOGIC_VECTOR(127 downto 0) := (OTHERS => '0');
 BEGIN
 	PROCESS(CLK, INIT)
 	BEGIN
 		IF INIT = '1' THEN
-			COUNTER	<= (OTHERS => '0');
-			L_VALUE	<= (OTHERS => '0');
-			L1_VALUE	<= (OTHERS => '0');
-			L2_VALUE	<= (OTHERS => '0');
+			COUNTER			<= (OTHERS => '0');
+			MULT_L_BY_7		<= '0';
+			MULT_L2_BY_7	<= '0';
+			L_VALUE			<= (OTHERS => '0');
+			L1_VALUE			<= (OTHERS => '0');
+			L2_VALUE			<= (OTHERS => '0');
 		ELSIF CLK = '1' AND CLK'EVENT THEN
 			IF DBL_L = '1' AND L_VALUE(127) = '1' THEN
 				L_VALUE	<= (L_VALUE(126 downto 0) & '0') XOR X"00000000000000000000000000000087";
@@ -49,6 +54,64 @@ BEGIN
 				L2_VALUE	<= (L2_VALUE(126 downto 0) & '0') XOR X"00000000000000000000000000000087";
 			ELSIF DBL_L2 = '1' THEN
 				L2_VALUE	<= (L2_VALUE(126 downto 0) & '0');
+			END IF;
+			
+			IF PTX_CTR = X"08" AND COUNTER = X"2" AND MULT_L_BY_7 = '0' AND DBL_L = '0' THEN
+				IF L_VALUE(127 downto 126) = "00" THEN
+					L_VALUE	<= (L_VALUE(125 downto 0) & "00")
+							  XOR (L_VALUE(126 downto 0) & '0')
+							  XOR L_VALUE;
+				END IF;
+				IF L_VALUE(127 downto 126) = "01" THEN
+					L_VALUE	<= (L_VALUE(125 downto 0) & "00")
+							  XOR X"00000000000000000000000000000087"
+							  XOR (L_VALUE(126 downto 0) & '0')
+							  XOR L_VALUE;
+				END IF;
+				IF L_VALUE(127 downto 126) = "10" THEN
+					L_VALUE	<= (L_VALUE(125 downto 0) & "00")
+							  XOR X"0000000000000000000000000000010E"
+							  XOR (L_VALUE(126 downto 0) & '0')
+							  XOR X"00000000000000000000000000000087"
+							  XOR L_VALUE;
+				END IF;
+				IF L_VALUE(127 downto 126) = "11" THEN
+					L_VALUE	<= (L_VALUE(125 downto 0) & "00")
+							  XOR X"0000000000000000000000000000010E"
+							  XOR (L_VALUE(126 downto 0) & '0')
+							  XOR L_VALUE;
+				END IF;
+				
+				MULT_L_BY_7	<= '1';
+			END IF;
+			
+			IF PTX_CTR = X"04" AND COUNTER = X"2" AND MULT_L2_BY_7 = '0' AND DBL_L2 = '0' THEN
+				IF L2_VALUE(127 downto 126) = "00" THEN
+					L2_VALUE	<= (L2_VALUE(125 downto 0) & "00")
+							  XOR (L2_VALUE(126 downto 0) & '0')
+							  XOR L2_VALUE;
+				END IF;
+				IF L2_VALUE(127 downto 126) = "01" THEN
+					L2_VALUE	<= (L2_VALUE(125 downto 0) & "00")
+							  XOR X"00000000000000000000000000000087"
+							  XOR (L2_VALUE(126 downto 0) & '0')
+							  XOR L2_VALUE;
+				END IF;
+				IF L2_VALUE(127 downto 126) = "10" THEN
+					L2_VALUE	<= (L2_VALUE(125 downto 0) & "00")
+							  XOR X"0000000000000000000000000000010E"
+							  XOR (L2_VALUE(126 downto 0) & '0')
+							  XOR X"00000000000000000000000000000087"
+							  XOR L2_VALUE;
+				END IF;
+				IF L2_VALUE(127 downto 126) = "11" THEN
+					L2_VALUE	<= (L2_VALUE(125 downto 0) & "00")
+							  XOR X"0000000000000000000000000000010E"
+							  XOR (L2_VALUE(126 downto 0) & '0')
+							  XOR L2_VALUE;
+				END IF;
+				
+				MULT_L2_BY_7	<= '1';
 			END IF;
 		
 			IF WR = '1' THEN
