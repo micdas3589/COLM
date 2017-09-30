@@ -27,6 +27,8 @@ ARCHITECTURE CTX_MEMORY_ARCH OF CTX_MEMORY IS
 	TYPE MEMORY_BLOCK IS ARRAY (0 TO conv_integer(LAST_ADDR)) OF STD_LOGIC_VECTOR(31 DOWNTO 0);
 	SIGNAL MEM : MEMORY_BLOCK;
 	
+	SIGNAL LOAD_COUNTER :STD_LOGIC_VECTOR(1 downto 0);
+	
 	SIGNAL CTR :STD_LOGIC_VECTOR(7 DOWNTO 0);
 	SIGNAL IXS :STD_LOGIC_VECTOR(7 DOWNTO 0);
 	SIGNAL IXL :STD_LOGIC_VECTOR(7 DOWNTO 0);	
@@ -80,14 +82,26 @@ BEGIN
 		END IF;
 	END PROCESS;
 	
-	PROCESS(CLK)
+	PROCESS(CLK, INIT)
 	BEGIN
-		IF (CLK'EVENT AND CLK = '1') THEN
-			IF (STORE = '1' AND CTR /= MEM_SIZE) THEN
-				MEM(conv_integer(IXS))		<= DIN(127 downto 96);
-				MEM(conv_integer(IXS) + 1)	<= DIN(95 downto 64);
-				MEM(conv_integer(IXS) + 2)	<= DIN(63 downto 32);
-				MEM(conv_integer(IXS) + 3)	<= DIN(31 downto 0);
+		IF INIT = '1' THEN
+			LOAD_COUNTER	<= (OTHERS => '0');
+		ELSIF (CLK'EVENT AND CLK = '1') THEN
+			IF (STORE = '1' AND CTR /= MEM_SIZE AND LOAD_COUNTER = "00") THEN
+				MEM(conv_integer(IXS)) 	<= DIN(127 downto 96);
+				LOAD_COUNTER				<= LOAD_COUNTER + 1;
+			END IF;
+			IF LOAD_COUNTER = "01" THEN
+				MEM(conv_integer(IXS)) 	<= DIN(95 downto 64);
+				LOAD_COUNTER				<= LOAD_COUNTER + 1;
+			END IF;
+			IF LOAD_COUNTER = "10" THEN
+				MEM(conv_integer(IXS)) 	<= DIN(63 downto 32);
+				LOAD_COUNTER				<= LOAD_COUNTER + 1;
+			END IF;
+			IF LOAD_COUNTER = "11" THEN
+				MEM(conv_integer(IXS)) 	<= DIN(31 downto 0);
+				LOAD_COUNTER				<= LOAD_COUNTER + 1;
 			END IF;
 		END IF;
 	END PROCESS;

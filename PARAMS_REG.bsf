@@ -83,16 +83,9 @@ agreement for further details.
 	(port
 		(pt 264 64)
 		(output)
-		(text "NPUB[63..0]" (rect 0 0 50 12)(font "Arial" ))
-		(text "NPUB[63..0]" (rect 193 59 243 71)(font "Arial" ))
-		(line (pt 264 64)(pt 248 64)(line_width 3))
-	)
-	(port
-		(pt 264 80)
-		(output)
 		(text "CONCAT[127..0]" (rect 0 0 70 12)(font "Arial" ))
-		(text "CONCAT[127..0]" (rect 173 75 243 87)(font "Arial" ))
-		(line (pt 264 80)(pt 248 80)(line_width 3))
+		(text "CONCAT[127..0]" (rect 173 59 243 71)(font "Arial" ))
+		(line (pt 264 64)(pt 248 64)(line_width 3))
 	)
 	(drawing
 		(rectangle (rect 16 16 248 128)(line_width 1))

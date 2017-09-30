@@ -56,7 +56,7 @@ BEGIN
 				L2_VALUE	<= (L2_VALUE(126 downto 0) & '0');
 			END IF;
 			
-			IF PTX_CTR = X"08" AND COUNTER = X"2" AND MULT_L_BY_7 = '0' AND DBL_L = '0' THEN
+			IF PTX_CTR = X"04" AND COUNTER = X"2" AND MULT_L_BY_7 = '0' AND DBL_L = '0' THEN
 				IF L_VALUE(127 downto 126) = "00" THEN
 					L_VALUE	<= (L_VALUE(125 downto 0) & "00")
 							  XOR (L_VALUE(126 downto 0) & '0')
@@ -85,7 +85,7 @@ BEGIN
 				MULT_L_BY_7	<= '1';
 			END IF;
 			
-			IF PTX_CTR = X"04" AND COUNTER = X"2" AND MULT_L2_BY_7 = '0' AND DBL_L2 = '0' THEN
+			IF PTX_CTR = X"00" AND COUNTER = X"2" AND MULT_L2_BY_7 = '0' AND DBL_L2 = '0' THEN
 				IF L2_VALUE(127 downto 126) = "00" THEN
 					L2_VALUE	<= (L2_VALUE(125 downto 0) & "00")
 							  XOR (L2_VALUE(126 downto 0) & '0')

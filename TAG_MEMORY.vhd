@@ -11,10 +11,10 @@ ENTITY TAG_MEMORY IS PORT
 	INIT	:IN STD_LOGIC;
 	STORE	:IN STD_LOGIC;
 	LOAD	:IN STD_LOGIC;
-	DIN	:IN STD_LOGIC_VECTOR(31 DOWNTO 0);
+	DIN	:IN STD_LOGIC_VECTOR(127 DOWNTO 0);
 	
 	DRL	:OUT STD_LOGIC;
-	DOUT	:OUT STD_LOGIC_VECTOR(127 DOWNTO 0)
+	DOUT	:OUT STD_LOGIC_VECTOR(31 DOWNTO 0)
 );
 END ENTITY;
 
@@ -26,6 +26,8 @@ ARCHITECTURE TAG_MEMORY_ARCH OF TAG_MEMORY IS
 	
 	TYPE MEMORY_BLOCK IS ARRAY (0 TO conv_integer(LAST_ADDR)) OF STD_LOGIC_VECTOR(31 DOWNTO 0);
 	SIGNAL MEM : MEMORY_BLOCK;
+	
+	SIGNAL LOAD_COUNTER :STD_LOGIC_VECTOR(1 downto 0);
 	
 	SIGNAL CTR :STD_LOGIC_VECTOR(7 DOWNTO 0);
 	SIGNAL IXS :STD_LOGIC_VECTOR(7 DOWNTO 0);
@@ -39,10 +41,10 @@ BEGIN
 		ELSE
 			IF (CLK'EVENT AND CLK = '1') THEN
 				IF ((STORE = '1' AND LOAD = '0' AND CTR /= MEM_SIZE) OR (STORE = '1' AND LOAD = '1' AND CTR = X"00")) THEN
-					CTR <= STD_LOGIC_VECTOR(unsigned(CTR) + 1);
+					CTR <= STD_LOGIC_VECTOR(unsigned(CTR) + 4);
 				END IF;
 				IF ((STORE = '0' AND LOAD = '1' AND CTR /= X"00") OR (STORE = '1' AND LOAD = '1' AND CTR = MEM_SIZE)) THEN
-					CTR <= STD_LOGIC_VECTOR(unsigned(CTR) - 4);
+					CTR <= STD_LOGIC_VECTOR(unsigned(CTR) - 1);
 				END IF;
 			END IF;
 		END IF;
@@ -55,7 +57,7 @@ BEGIN
 			IF (CLK'EVENT AND CLK = '1') THEN
 				IF (STORE = '1' AND CTR /= MEM_SIZE) THEN
 					IF(IXS /= LAST_ADDR) THEN
-						IXS <= STD_LOGIC_VECTOR(unsigned(IXS) + 1);
+						IXS <= STD_LOGIC_VECTOR(unsigned(IXS) + 4);
 					ELSE
 						IXS <= (others => '0');
 					END IF;
@@ -71,7 +73,7 @@ BEGIN
 			IF (CLK'EVENT AND CLK = '1') THEN
 				IF (LOAD = '1' AND CTR /= X"00") THEN
 					IF(IXL /= LAST_ADDR) THEN
-						IXL <= STD_LOGIC_VECTOR(unsigned(IXL) + 4);
+						IXL <= STD_LOGIC_VECTOR(unsigned(IXL) + 1);
 					ELSE
 						IXL <= (others => '0');
 					END IF;
@@ -80,11 +82,26 @@ BEGIN
 		END IF;
 	END PROCESS;
 	
-	PROCESS(CLK)
+	PROCESS(CLK, INIT)
 	BEGIN
-		IF (CLK'EVENT AND CLK = '1') THEN
-			IF (STORE = '1' AND CTR /= MEM_SIZE) THEN
-				MEM(conv_integer(IXS)) <= DIN;
+		IF INIT = '1' THEN
+			LOAD_COUNTER	<= (OTHERS => '0');
+		ELSIF (CLK'EVENT AND CLK = '1') THEN
+			IF (STORE = '1' AND CTR /= MEM_SIZE AND LOAD_COUNTER = "00") THEN
+				MEM(conv_integer(IXS)) 	<= DIN(127 downto 96);
+				LOAD_COUNTER				<= LOAD_COUNTER + 1;
+			END IF;
+			IF LOAD_COUNTER = "01" THEN
+				MEM(conv_integer(IXS)) 	<= DIN(95 downto 64);
+				LOAD_COUNTER				<= LOAD_COUNTER + 1;
+			END IF;
+			IF LOAD_COUNTER = "10" THEN
+				MEM(conv_integer(IXS)) 	<= DIN(63 downto 32);
+				LOAD_COUNTER				<= LOAD_COUNTER + 1;
+			END IF;
+			IF LOAD_COUNTER = "11" THEN
+				MEM(conv_integer(IXS)) 	<= DIN(31 downto 0);
+				LOAD_COUNTER				<= LOAD_COUNTER + 1;
 			END IF;
 		END IF;
 	END PROCESS;
@@ -93,7 +110,7 @@ BEGIN
 	BEGIN
 		IF (CLK'EVENT AND CLK = '1') THEN
 			IF(LOAD = '1' AND CTR /= X"00") THEN
-				DOUT <= MEM(conv_integer(IXL)) & MEM(conv_integer(IXL) + 1) & MEM(conv_integer(IXL) + 2) & MEM(conv_integer(IXL) + 3);
+				DOUT <= MEM(conv_integer(IXL));
 			ELSE
 				DOUT <= (others => 'Z');
 			END IF;
