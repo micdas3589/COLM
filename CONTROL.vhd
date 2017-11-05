@@ -149,7 +149,7 @@ BEGIN
 						ELSE '0';
 	WR_TAG		<= '1'
 						WHEN (COUNTER_CTX = X"2E" AND ((conv_integer(TAG_CTR(7 downto 2)-1) MOD conv_integer(TAG_INTVL)) = 0))
-						  OR (COUNTER_CTX = X"2E" AND DRL_PTX = '0')
+						  OR (COUNTER_CTX = X"2E" AND COUNTER_PTX = X"FF" AND ((conv_integer(TAG_CTR(7 downto 2)) MOD conv_integer(TAG_INTVL)) = 0))
 						ELSE '0';
 						
 						
