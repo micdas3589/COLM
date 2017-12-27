@@ -48,7 +48,9 @@ ARCHITECTURE ARCH_CONTROL OF CONTROL IS
 	SIGNAL COUNTER_ASCD	:STD_LOGIC_VECTOR(7 downto 0);
 	SIGNAL COUNTER_PTX	:STD_LOGIC_VECTOR(7 downto 0);
 	SIGNAL COUNTER_CTX	:STD_LOGIC_VECTOR(7 downto 0);
+	SIGNAL TAG_CTR_VAL	:STD_LOGIC_VECTOR(7 downto 0);
 	SIGNAL RUN_ENC_CTX	:STD_LOGIC := '0';
+	SIGNAL WR_TAG_FL		:STD_LOGIC := '0';
 BEGIN
 	PROCESS(CLK, INIT)
 	BEGIN
@@ -56,7 +58,9 @@ BEGIN
 			COUNTER_ASCD	<= (OTHERS => '0');
 			COUNTER_PTX		<= (OTHERS => '0');
 			COUNTER_CTX		<= (OTHERS => '0');
+			TAG_CTR_VAL		<= (OTHERS => '0');
 			RUN_ENC_CTX		<= '0';
+			WR_TAG_FL		<= '0';
 		ELSIF CLK = '1' AND CLK'EVENT THEN
 			IF (WR = '1' AND ADDR_WR = X"FFFFFFFF") OR COUNTER_ASCD /= X"0" THEN
 				IF COUNTER_ASCD /= X"8B" AND COUNTER_ASCD /= X"FF" THEN
@@ -90,6 +94,14 @@ BEGIN
 				END IF;
 				IF COUNTER_PTX = X"FF" AND DRL_PTX = '0' AND COUNTER_CTX = X"2F" THEN
 					COUNTER_CTX	<= X"FF";
+				END IF;
+				
+				IF (COUNTER_CTX = X"2E" AND (TAG_CTR(7 downto 2)-1 = TAG_CTR_VAL + TAG_INTVL))
+				OR (COUNTER_CTX = X"2E" AND COUNTER_PTX = X"FF" AND (TAG_CTR(7 downto 2)-1 = TAG_CTR_VAL + TAG_INTVL)) THEN
+					WR_TAG_FL	<= '1';
+					TAG_CTR_VAL	<= TAG_CTR_VAL + TAG_INTVL(7 downto 0);
+				ELSE
+					WR_TAG_FL	<= '0';
 				END IF;
 			END IF;
 		END IF;
@@ -137,6 +149,8 @@ BEGIN
 						ELSE '0';
 	DBL_L2		<= '1'
 						WHEN COUNTER_CTX = X"01"
+						  OR (COUNTER_CTX = X"20" AND (TAG_CTR(7 downto 2)-1 = TAG_CTR_VAL + TAG_INTVL))
+						  OR (COUNTER_CTX = X"20" AND COUNTER_PTX = X"FF" AND (TAG_CTR(7 downto 2)-1 = TAG_CTR_VAL + TAG_INTVL))
 						ELSE '0';
 	RUN_EK3		<= '1'
 						WHEN COUNTER_CTX >= X"01" AND COUNTER_CTX <= X"2E"
@@ -147,10 +161,7 @@ BEGIN
 	WR_CTX		<= '1'
 						WHEN COUNTER_CTX = X"2E"
 						ELSE '0';
-	WR_TAG		<= '1'
-						WHEN (COUNTER_CTX = X"2E" AND ((conv_integer(TAG_CTR(7 downto 2)-1) MOD conv_integer(TAG_INTVL)) = 0))
-						  OR (COUNTER_CTX = X"2E" AND COUNTER_PTX = X"FF" AND ((conv_integer(TAG_CTR(7 downto 2)) MOD conv_integer(TAG_INTVL)) = 0))
-						ELSE '0';
+	WR_TAG		<= WR_TAG_FL;
 						
 						
 	RD_L1			<= '1'

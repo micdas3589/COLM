@@ -1402,14 +1402,14 @@ agreement for further details.
 		(pt 200 32)
 		(output)
 		(text "DRL" (rect 0 0 22 12)(font "Arial" ))
-		(text "DRL" (rect 161 27 179 39)(font "Arial" ))
+		(text "DRL" (rect 161 27 183 39)(font "Arial" ))
 		(line (pt 200 32)(pt 184 32))
 	)
 	(port
 		(pt 200 48)
 		(output)
 		(text "DOUT[31..0]" (rect 0 0 62 12)(font "Arial" ))
-		(text "DOUT[31..0]" (rect 127 43 179 55)(font "Arial" ))
+		(text "DOUT[31..0]" (rect 127 43 189 55)(font "Arial" ))
 		(line (pt 200 48)(pt 184 48)(line_width 3))
 	)
 	(drawing
@@ -1459,14 +1459,14 @@ agreement for further details.
 		(pt 200 32)
 		(output)
 		(text "DRL" (rect 0 0 22 12)(font "Arial" ))
-		(text "DRL" (rect 161 27 179 39)(font "Arial" ))
+		(text "DRL" (rect 161 27 183 39)(font "Arial" ))
 		(line (pt 200 32)(pt 184 32))
 	)
 	(port
 		(pt 200 48)
 		(output)
 		(text "DOUT[31..0]" (rect 0 0 62 12)(font "Arial" ))
-		(text "DOUT[31..0]" (rect 127 43 179 55)(font "Arial" ))
+		(text "DOUT[31..0]" (rect 127 43 189 55)(font "Arial" ))
 		(line (pt 200 48)(pt 184 48)(line_width 3))
 	)
 	(drawing
@@ -1537,18 +1537,6 @@ agreement for further details.
 	(text "CLK" (rect 88 1144 109 1156)(font "Arial" ))
 	(pt 136 1160)
 	(pt 80 1160)
-)
-(connector
-	(text "KEY[127..0]" (rect 72 1192 132 1204)(font "Arial" ))
-	(pt 136 1208)
-	(pt 80 1208)
-	(bus)
-)
-(connector
-	(text "RO_IN[127..0]" (rect 72 1208 143 1220)(font "Arial" ))
-	(pt 136 1224)
-	(pt 80 1224)
-	(bus)
 )
 (connector
 	(text "INIT_EK3" (rect 88 1160 135 1172)(font "Arial" ))
@@ -2229,11 +2217,6 @@ agreement for further details.
 	(pt 1160 912)
 )
 (connector
-	(pt 1424 896)
-	(pt 1400 896)
-	(bus)
-)
-(connector
 	(text "<<__$DEF_ALIAS15380>>" (rect 1138 912 1267 924)(font "Arial" )(invisible))
 	(pt 1096 928)
 	(pt 1208 928)
@@ -2260,27 +2243,12 @@ agreement for further details.
 	(bus)
 )
 (connector
-	(pt 1424 1000)
-	(pt 1424 896)
-	(bus)
-)
-(connector
-	(pt 1424 1000)
-	(pt 1472 1000)
-	(bus)
-)
-(connector
 	(pt 1400 1080)
 	(pt 1424 1080)
 	(bus)
 )
 (connector
 	(pt 1424 1080)
-	(pt 1424 1016)
-	(bus)
-)
-(connector
-	(pt 1472 1016)
 	(pt 1424 1016)
 	(bus)
 )
@@ -2333,4 +2301,36 @@ agreement for further details.
 	(text "RUN_EK3" (rect 491 688 541 700)(font "Arial" ))
 	(pt 464 704)
 	(pt 528 704)
+)
+(connector
+	(text "KEY[127..0]" (rect 72 1192 132 1204)(font "Arial" ))
+	(pt 136 1208)
+	(pt 80 1208)
+	(bus)
+)
+(connector
+	(text "RO_IN[127..0]" (rect 72 1208 143 1220)(font "Arial" ))
+	(pt 136 1224)
+	(pt 80 1224)
+	(bus)
+)
+(connector
+	(pt 1424 1016)
+	(pt 1472 1016)
+	(bus)
+)
+(connector
+	(pt 1472 1000)
+	(pt 1424 1000)
+	(bus)
+)
+(connector
+	(pt 1424 1000)
+	(pt 1424 896)
+	(bus)
+)
+(connector
+	(pt 1400 896)
+	(pt 1424 896)
+	(bus)
 )
