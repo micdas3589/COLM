@@ -131,6 +131,7 @@ BEGIN
 						ELSE '0';
 	DBL_L1		<= '1'
 						WHEN COUNTER_ASCD = X"5C"
+						  OR COUNTER_ASCD = X"8A"
 						ELSE '0';
 	RD_ASCD		<= '1'
 						WHEN COUNTER_ASCD = X"5F" AND DRL_ASCD = '1'
