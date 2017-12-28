@@ -172,7 +172,7 @@ BEGIN
 						WHEN COUNTER_ASCD = X"FF" --DRL_PTX = '1' AND DRL_ASCD = '0'
 						ELSE '0';
 	WR_PTX		<= '1'
-						WHEN WR = '1' AND ADDR_WR = X"11111111"
+						WHEN WR = '1' AND (ADDR_WR = X"11111111" OR ADDR_WR = X"55555555")
 						ELSE '0';
 	WR_ASCD		<= '1'
 						WHEN WR = '1' AND ADDR_WR = X"22222222"
